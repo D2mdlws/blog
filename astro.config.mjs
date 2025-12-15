@@ -15,6 +15,8 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
+  site: 'https://blog.mdlws.net',
+
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex]

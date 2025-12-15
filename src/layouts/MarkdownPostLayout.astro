@@ -26,43 +26,50 @@ const currentUrl = Astro.url.href;
     </div>
 
     <!-- ============================================ -->
-    <div class="mt-16 p-6 bg-gray-50 rounded-lg border border-gray-100 font-sans text-sm text-gray-500">
-      <div class="flex flex-col gap-2">
+    <!-- ============================================ -->
+    <div class="mt-24 pt-8 border-t border-gray-200">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         
-        <!-- 版权所属 -->
-        <div>
-          <span class="font-bold text-gray-700">本文作者：</span>
-          <span>mdlws</span>
-        </div>
-
-        <!-- 本文链接 -->
-        <div>
-          <span class="font-bold text-gray-700">本文链接：</span>
-          <a href={currentUrl} class="hover:text-blue-600 break-all transition-colors underline decoration-gray-300 underline-offset-4">
-            {currentUrl}
-          </a>
-        </div>
-
-        <!-- 版权协议 -->
-        <div class="mt-2 pt-2 border-t border-gray-200">
-          <span class="font-bold text-gray-700">版权声明：</span>
-          <span>
-            所有文章除特别声明外，均采用 
+        <!-- 左侧：作者与协议 -->
+        <div class="space-y-6">
+          <div>
+            <span class="block text-xs text-gray-400 font-sans font-bold tracking-widest uppercase mb-1">
+              Author
+            </span>
+            <span class="font-serif text-lg text-gray-900 italic">
+              mdlws
+            </span>
+          </div>
+          <div>
+            <span class="block text-xs text-gray-400 font-sans font-bold tracking-widest uppercase mb-1">
+              License
+            </span>
             <a 
               href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="text-gray-800 hover:text-black font-semibold border-b border-gray-300 hover:border-black transition-colors"
+              class="font-serif text-gray-600 hover:text-black border-b border-gray-200 hover:border-black transition-all pb-0.5"
             >
               CC BY-NC-SA 4.0
-            </a> 
-            许可协议。转载请注明出处。
+            </a>
+          </div>
+        </div>
+
+        <!-- 右侧：永久链接 -->
+        <div>
+          <span class="block text-xs text-gray-400 font-sans font-bold tracking-widest uppercase mb-1">
+            Permalink
           </span>
+          <a href={currentUrl} class="font-mono text-sm text-gray-500 hover:text-black break-all transition-colors">
+            {currentUrl}
+          </a>
+          <p class="text-xs text-gray-300 mt-2 font-serif">
+            转载请保留原文链接与作者署名。
+          </p>
         </div>
 
       </div>
     </div>
-    <!-- ============================================ -->
 
   </article>
 
