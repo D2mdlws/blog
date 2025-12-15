@@ -2,102 +2,119 @@
 
 main {
   /* ====================
-     1. 调色板：高对比度、极简白
+     1. 全局调色板：强制纯白/极简灰
      ==================== */
-  --color-canvas-default: transparent !important; /* 背景完全透明 */
+  --color-canvas-default: transparent !important;
   --color-canvas-overlay: #ffffff !important;
-  --color-canvas-subtle: #f4f4f5 !important;
+  --color-canvas-subtle: #ffffff !important; /* tab背景也强制变白 */
 
-  /* 边框：设为透明或极淡，消除“盒子感” */
-  --color-border-default: transparent !important; 
+  /* 边框：透明或极淡 */
+  --color-border-default: transparent !important;
   --color-border-muted: transparent !important;
 
-  /* 文字：使用深灰接近黑，提升可读性 */
-  --color-fg-default: #18181b !important; /* Zinc-900 */
-  --color-fg-muted: #52525b !important;   /* Zinc-600 */
-  --color-fg-subtle: #71717a !important;  /* Zinc-500 */
+  /* 文字：Zinc 色系 */
+  --color-fg-default: #18181b !important;
+  --color-fg-muted: #71717a !important;
+  --color-fg-subtle: #a1a1aa !important;
 
-  /* 输入框：纯白底 + 细灰边 */
+  /* 输入框 */
   --color-input-bg: #ffffff !important;
-  --color-input-border: #e4e4e7 !important; /* 极细的灰色 (Zinc-200) */
+  --color-input-border: #e4e4e7 !important;
   --color-input-text: #18181b !important;
 
-  /* 按钮：扁平化 */
-  --color-btn-text: #27272a !important;
+  /* === 核心修改：按钮变量 === */
+  /* 让所有按钮默认都是白底黑字 */
+  --color-btn-text: #52525b !important;
   --color-btn-bg: #ffffff !important;
-  --color-btn-border: #e4e4e7 !important;
-  --color-btn-primary-bg: #18181b !important; /* 黑色主按钮 */
-  --color-btn-primary-text: #ffffff !important;
+  --color-btn-border: #e4e4e7 !important; /* 默认极浅边框 */
+  
+  --color-btn-primary-bg: #ffffff !important;       /* 主按钮背景变白 */
+  --color-btn-primary-text: #27272a !important;     /* 主按钮文字变深灰 */
+  --color-btn-primary-border: #e4e4e7 !important;   /* 主按钮边框变浅 */
+  
+  --color-btn-primary-hover-bg: #ffffff !important; 
+  --color-btn-primary-hover-border: #27272a !important; /* 悬停时边框变黑 */
 
-  /* 字体匹配 */
   font-family: "Inter", -apple-system, sans-serif !important;
 }
 
 /* ====================
-   2. 样式重塑 (整容手术)
+   2. 样式重塑
    ==================== */
 
-/* 核心：移除外层大边框和阴影 */
+/* 容器去边框 */
 .gsc-comment-box {
-  border: none !important; 
+  border: none !important;
   box-shadow: none !important;
-  background-color: transparent !important;
+  background: transparent !important;
 }
 
-/* 核心：重塑输入区域 */
-/* 我们只给“写字的地方”加边框，而不是给整个组件加边框 */
-.gsc-comment-box-textarea {
-  border: 1px solid #e4e4e7 !important; /* 只有这里有细边框 */
-  border-radius: 8px !important;
-  padding: 12px !important; /* 增加内边距，呼吸感 */
-  font-size: 15px !important; /* 增大字号提升可读性 */
-  line-height: 1.6 !important;
-}
-
-/* 聚焦时，输入框稍微加深一点点，不要发光 */
-.gsc-comment-box-textarea:focus {
-  border-color: #a1a1aa !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* 隐藏顶部 Tab栏 (Write/Preview) 的背景和边框 */
+/* 顶部 Tab 栏背景彻底透明 */
 .gsc-comment-box-tabs {
   border: none !important;
-  margin-bottom: -1px !important; /* 对齐修复 */
 }
 .gsc-comment-box-tabs .color-bg-canvas {
   background: transparent !important;
 }
 
-/* 选中 Tab 的样式：简单的下划线 */
-.gsc-comment-box-tabs .color-bg-canvas.selected {
-  border: none !important;
-  border-bottom: 2px solid #18181b !important; /* 黑色下划线 */
-  background: transparent !important;
-  font-weight: 600 !important;
+/* 输入框美化 */
+.gsc-comment-box-textarea {
+  border: 1px solid #e4e4e7 !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  font-size: 15px !important;
+  line-height: 1.6 !important;
+  background: #ffffff !important;
 }
 
-/* 隐藏底部工具栏的边框 */
+.gsc-comment-box-textarea:focus {
+  border-color: #a1a1aa !important; /* 聚焦时灰色加深 */
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ====================
+   3. 按钮深度整形 (解决“丑陋黑色”的核心代码)
+   ==================== */
+
+/* 针对 "Sign in with GitHub" 和 "Comment" 按钮 */
+.btn-primary, .btn {
+  background-color: #ffffff !important;
+  border: 1px solid #e4e4e7 !important;
+  color: #52525b !important; /* 文字深灰，不刺眼 */
+  box-shadow: none !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease;
+}
+
+/* 悬停效果：保持极简，只加深边框和文字 */
+.btn-primary:hover, .btn:hover {
+  background-color: #ffffff !important;
+  border-color: #18181b !important; /* 悬停变黑边 */
+  color: #000000 !important;        /* 文字变纯黑 */
+  text-decoration: none !important;
+}
+
+/* 修正按钮里的 SVG 图标颜色 (GitHub Logo) */
+.btn-primary svg, .btn svg {
+  fill: currentColor !important; /* 让图标跟随文字颜色变化 */
+}
+
+/* 底部工具栏微调 */
 .gsc-comment-box-bottom {
   border: none !important;
   background: transparent !important;
-  padding-top: 10px !important;
+  padding-top: 12px !important;
 }
 
-/* 登录按钮美化 */
-.gsc-social-reaction-summary-item {
-  border: 1px solid #e4e4e7 !important;
-  border-radius: 6px !important;
-}
-
-/* 强制深色模式下依然保持这套“白纸黑字”的风格 */
+/* 4. 强制深色模式下依然保持白底黑字风格 */
 @media (prefers-color-scheme: dark) {
   body, main {
     background-color: transparent !important;
     color: #18181b !important;
   }
-  .gsc-comment-box-textarea {
+  .gsc-comment-box-textarea, .btn-primary, .btn {
     background-color: #ffffff !important;
     color: #18181b !important;
   }
