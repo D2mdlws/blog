@@ -1,74 +1,104 @@
 /* public/giscus.css */
 
-/* 核心策略：不使用任何 @media (prefers-color-scheme) 查询 */
-/* 无论系统什么颜色，强制使用以下变量 */
-
 main {
-  /* 1. 强制浅色变量 */
-  --color-prettylights-syntax-comment: #6e7781;
-  --color-prettylights-syntax-entity: #8250df;
-  --color-prettylights-syntax-keyword: #cf222e;
-  --color-prettylights-syntax-string: #0a3069;
-  --color-prettylights-syntax-variable: #953800;
-
-  --color-canvas-default: transparent !important;
+  /* ====================
+     1. 调色板：高对比度、极简白
+     ==================== */
+  --color-canvas-default: transparent !important; /* 背景完全透明 */
   --color-canvas-overlay: #ffffff !important;
-  --color-canvas-subtle: #f6f8fa !important;
-  
-  --color-border-default: #e4e4e7 !important; /* 极浅灰 */
-  --color-border-muted: #e4e4e7 !important;
+  --color-canvas-subtle: #f4f4f5 !important;
 
-  /* 2. 强制文字颜色为深灰（防止深色模式变白） */
-  --color-fg-default: #27272a !important;
-  --color-fg-muted: #57606a !important;
-  --color-fg-subtle: #6e7781 !important;
+  /* 边框：设为透明或极淡，消除“盒子感” */
+  --color-border-default: transparent !important; 
+  --color-border-muted: transparent !important;
 
-  /* 3. 强制输入框背景为白 */
+  /* 文字：使用深灰接近黑，提升可读性 */
+  --color-fg-default: #18181b !important; /* Zinc-900 */
+  --color-fg-muted: #52525b !important;   /* Zinc-600 */
+  --color-fg-subtle: #71717a !important;  /* Zinc-500 */
+
+  /* 输入框：纯白底 + 细灰边 */
   --color-input-bg: #ffffff !important;
-  --color-input-border: #e4e4e7 !important;
-  --color-input-text: #27272a !important;
+  --color-input-border: #e4e4e7 !important; /* 极细的灰色 (Zinc-200) */
+  --color-input-text: #18181b !important;
 
-  /* 4. 按钮样式 */
-  --color-btn-text: #24292f !important;
-  --color-btn-bg: #f6f8fa !important;
+  /* 按钮：扁平化 */
+  --color-btn-text: #27272a !important;
+  --color-btn-bg: #ffffff !important;
   --color-btn-border: #e4e4e7 !important;
-  --color-btn-primary-bg: #27272a !important;
+  --color-btn-primary-bg: #18181b !important; /* 黑色主按钮 */
   --color-btn-primary-text: #ffffff !important;
 
-  font-family: "Inter", system-ui, sans-serif !important;
+  /* 字体匹配 */
+  font-family: "Inter", -apple-system, sans-serif !important;
 }
 
-/* 评论框去黑框、去阴影 */
+/* ====================
+   2. 样式重塑 (整容手术)
+   ==================== */
+
+/* 核心：移除外层大边框和阴影 */
 .gsc-comment-box {
+  border: none !important; 
+  box-shadow: none !important;
   background-color: transparent !important;
-  border: 1px solid #e4e4e7 !important;
-  box-shadow: none !important;
-  border-radius: 6px;
 }
 
-/* 聚焦状态 */
-.gsc-comment-box:focus-within {
+/* 核心：重塑输入区域 */
+/* 我们只给“写字的地方”加边框，而不是给整个组件加边框 */
+.gsc-comment-box-textarea {
+  border: 1px solid #e4e4e7 !important; /* 只有这里有细边框 */
+  border-radius: 8px !important;
+  padding: 12px !important; /* 增加内边距，呼吸感 */
+  font-size: 15px !important; /* 增大字号提升可读性 */
+  line-height: 1.6 !important;
+}
+
+/* 聚焦时，输入框稍微加深一点点，不要发光 */
+.gsc-comment-box-textarea:focus {
   border-color: #a1a1aa !important;
+  outline: none !important;
   box-shadow: none !important;
 }
 
-/* 隐藏顶部 Tab 边框 */
+/* 隐藏顶部 Tab栏 (Write/Preview) 的背景和边框 */
 .gsc-comment-box-tabs {
-  border-color: transparent !important;
+  border: none !important;
+  margin-bottom: -1px !important; /* 对齐修复 */
 }
 .gsc-comment-box-tabs .color-bg-canvas {
-  background-color: transparent !important;
+  background: transparent !important;
 }
 
-/* 隐藏底部边框 */
+/* 选中 Tab 的样式：简单的下划线 */
+.gsc-comment-box-tabs .color-bg-canvas.selected {
+  border: none !important;
+  border-bottom: 2px solid #18181b !important; /* 黑色下划线 */
+  background: transparent !important;
+  font-weight: 600 !important;
+}
+
+/* 隐藏底部工具栏的边框 */
 .gsc-comment-box-bottom {
-  border-top: 1px solid #e4e4e7 !important;
-  background-color: transparent !important;
+  border: none !important;
+  background: transparent !important;
+  padding-top: 10px !important;
 }
 
-/* 强制覆盖深色模式下的默认行为 */
+/* 登录按钮美化 */
+.gsc-social-reaction-summary-item {
+  border: 1px solid #e4e4e7 !important;
+  border-radius: 6px !important;
+}
+
+/* 强制深色模式下依然保持这套“白纸黑字”的风格 */
 @media (prefers-color-scheme: dark) {
-  body {
-    color: #27272a !important; /* 强行变黑字 */
+  body, main {
+    background-color: transparent !important;
+    color: #18181b !important;
+  }
+  .gsc-comment-box-textarea {
+    background-color: #ffffff !important;
+    color: #18181b !important;
   }
 }
