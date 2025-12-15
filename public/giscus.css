@@ -2,68 +2,97 @@
 
 main {
   /* =========================================
-     核心策略：强制定义颜色变量
-     无论系统是深色还是浅色，这里都强制使用浅色/极简配色
+     全局变量重写：极简去边框风格
      ========================================= */
 
-  /* 1. 背景与文字基础 */
-  --color-canvas-default: transparent; /* 背景透明，透出你博客的 #fafafa */
-  --color-canvas-overlay: #ffffff;     /* 评论框、弹出菜单背景 */
-  --color-canvas-subtle: #f4f4f5;      /* 鼠标悬停时的背景 */
-  
-  --color-border-default: #e4e4e7;     /* 极浅的灰色边框 (Tailwind zinc-200) */
-  --color-border-muted: #e4e4e7;
-  
-  --color-fg-default: #27272a;         /* 正文颜色：深灰 (Tailwind zinc-800) */
-  --color-fg-muted: #71717a;           /* 辅助文字：中灰 (Tailwind zinc-500) */
-  --color-fg-subtle: #a1a1aa;          /* 极浅文字 */
+  /* 1. 核心边框颜色：设为极浅的灰色，甚至接近透明 */
+  --color-border-default: #f4f4f5;      /* 默认边框：几不可见 */
+  --color-border-muted: #f4f4f5;
+  --color-border-primary: #e4e4e7;      /* 聚焦时的边框：淡灰 */
 
-  /* 2. 按钮样式 (登录/回复按钮) */
-  --color-btn-text: #27272a;
+  /* 2. 背景颜色 */
+  --color-canvas-default: transparent;  /* 整体背景透明 */
+  --color-canvas-overlay: #ffffff;      /* 弹窗背景 */
+  --color-canvas-subtle: #fafafa;       /* 悬停背景 */
+
+  /* 3. 文字颜色 */
+  --color-fg-default: #27272a;          /* 正文深灰 */
+  --color-fg-muted: #a1a1aa;            /* 提示文字浅灰 */
+  
+  /* 4. 输入框专属设置 (关键) */
+  --color-input-bg: #ffffff;            /* 输入框背景白 */
+  --color-input-border: #f4f4f5;        /* 输入框默认边框：极浅 */
+  
+  /* 5. 按钮样式 (登录/预览按钮) */
+  --color-btn-text: #52525b;
   --color-btn-bg: #ffffff;
-  --color-btn-border: #e4e4e7;
-  --color-btn-hover-bg: #f4f4f5;
+  --color-btn-border: #e4e4e7;          /* 按钮边框：淡灰 */
+  --color-btn-hover-bg: #fafafa;
   --color-btn-hover-border: #d4d4d8;
-  --color-btn-primary-bg: #52525b;     /* 主按钮背景：你的主题色 */
+  
+  /* 6. 主色调 (提交按钮) */
+  --color-btn-primary-bg: #27272a;      /* 黑色背景 */
   --color-btn-primary-text: #ffffff;
-
-  /* 3. 输入框样式 */
-  --color-input-bg: #ffffff;
-  --color-input-border: #e4e4e7;
-  --color-input-text: #27272a;
-
-  /* 4. 代码块高亮颜色 (GitHub Light 风格) */
-  --color-prettylights-syntax-comment: #6e7781;
-  --color-prettylights-syntax-entity: #8250df;
-  --color-prettylights-syntax-keyword: #cf222e;
-  --color-prettylights-syntax-string: #0a3069;
-  --color-prettylights-syntax-variable: #953800;
-
-  /* 字体设置：跟随你的博客设计 */
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  --color-btn-primary-border: #27272a;
+  
+  font-family: "Inter", system-ui, sans-serif;
 }
 
-/* 标题字体：使用衬线体 */
-.gsc-header {
-  font-family: "Charter", "Bitstream Charter", serif; 
-}
+/* =========================================
+   深度定制类名 (强制覆盖 GitHub 原生样式)
+   ========================================= */
 
-/* 评论框圆角优化：更符合极简风格 */
+/* 1. 评论输入大框 */
 .gsc-comment-box {
-  border-radius: 0.5rem;
+  border-color: var(--color-border-default) !important;
+  background-color: transparent !important; /* 只有输入区域是白的，外框透明 */
+  box-shadow: none !important; /* 核心：去掉那个难看的阴影 */
 }
 
-/* 修正深色模式下的强制白色问题 */
+/* 2. 输入框聚焦时的状态 */
+.gsc-comment-box:focus-within {
+  border-color: #d4d4d8 !important; /* 聚焦时稍微深一点点，不要变黑 */
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.03) !important; /* 极淡的柔光晕 */
+}
+
+/* 3. 顶部的 "Write / Preview" 标签栏 */
+.gsc-comment-box-tabs {
+  border-color: transparent !important;
+}
+
+.gsc-comment-box-tabs .color-bg-canvas {
+  background-color: transparent !important;
+}
+
+/* 4. 底部工具栏 (登录按钮那一排) */
+.gsc-comment-box-bottom {
+  border-top: 1px solid #f4f4f5 !important; /* 分割线极细 */
+  background-color: transparent !important;
+}
+
+/* 5. 按钮圆角优化 */
+.btn {
+  border-radius: 6px !important;
+  font-weight: normal !important;
+  font-size: 13px !important;
+}
+
+/* 6. 标题字体 */
+.gsc-header {
+  font-family: "Charter", serif;
+  font-weight: bold;
+}
+
+/* =========================================
+   深色模式保险丝 (防止系统设置干扰)
+   ========================================= */
 @media (prefers-color-scheme: dark) {
   main {
-    /* 再次申明：即使在深色模式下，也强制使用上述变量 */
     --color-fg-default: #27272a !important;
-    --color-fg-muted: #71717a !important;
-    --color-border-default: #e4e4e7 !important;
-    --color-btn-text: #27272a !important;
-    --color-input-text: #27272a !important;
-    /* 确保输入框背景是白的，不是黑的 */
-    --color-canvas-overlay: #ffffff !important;
+    --color-fg-muted: #a1a1aa !important;
     --color-input-bg: #ffffff !important;
+    --color-btn-text: #52525b !important;
+    --color-border-default: #f4f4f5 !important;
+    --color-canvas-default: transparent !important;
   }
 }
