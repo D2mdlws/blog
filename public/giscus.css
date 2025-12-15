@@ -2,120 +2,130 @@
 
 main {
   /* ====================
-     1. 全局调色板：强制纯白/极简灰
+     1. 全局变量：核心是“去背景”
      ==================== */
+  
+  /* 将所有原本是白色的背景变量，统统设为透明 */
   --color-canvas-default: transparent !important;
-  --color-canvas-overlay: #ffffff !important;
-  --color-canvas-subtle: #ffffff !important; /* tab背景也强制变白 */
+  --color-canvas-overlay: transparent !important;
+  --color-canvas-subtle: transparent !important;
 
-  /* 边框：透明或极淡 */
+  /* 输入框背景：透明 (透出你博客的底色) */
+  --color-input-bg: transparent !important;
+  
+  /* 按钮背景：透明 */
+  --color-btn-bg: transparent !important;
+  
+  /* 边框：保持极简的细灰线 */
   --color-border-default: transparent !important;
   --color-border-muted: transparent !important;
 
-  /* 文字：Zinc 色系 */
+  /* 文字颜色：保持深灰，确保可读性 */
   --color-fg-default: #18181b !important;
   --color-fg-muted: #71717a !important;
   --color-fg-subtle: #a1a1aa !important;
 
-  /* 输入框 */
-  --color-input-bg: #ffffff !important;
+  /* 输入框文字与边框 */
   --color-input-border: #e4e4e7 !important;
   --color-input-text: #18181b !important;
 
-  /* === 核心修改：按钮变量 === */
-  /* 让所有按钮默认都是白底黑字 */
+  /* 按钮边框与文字 */
   --color-btn-text: #52525b !important;
-  --color-btn-bg: #ffffff !important;
-  --color-btn-border: #e4e4e7 !important; /* 默认极浅边框 */
+  --color-btn-border: #e4e4e7 !important;
   
-  --color-btn-primary-bg: #ffffff !important;       /* 主按钮背景变白 */
-  --color-btn-primary-text: #27272a !important;     /* 主按钮文字变深灰 */
-  --color-btn-primary-border: #e4e4e7 !important;   /* 主按钮边框变浅 */
-  
-  --color-btn-primary-hover-bg: #ffffff !important; 
-  --color-btn-primary-hover-border: #27272a !important; /* 悬停时边框变黑 */
+  /* 主按钮 (登录/发表) */
+  --color-btn-primary-bg: transparent !important;
+  --color-btn-primary-text: #18181b !important;
+  --color-btn-primary-border: #e4e4e7 !important;
+  --color-btn-primary-hover-bg: transparent !important; 
+  --color-btn-primary-hover-border: #000000 !important;
 
   font-family: "Inter", -apple-system, sans-serif !important;
 }
 
 /* ====================
-   2. 样式重塑
+   2. 针对性修复 (手术刀式去白)
    ==================== */
 
-/* 容器去边框 */
-.gsc-comment-box {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-}
-
-/* 顶部 Tab 栏背景彻底透明 */
+/* --- 修复 1：Tab 栏 (输入/预览) --- */
 .gsc-comment-box-tabs {
   border: none !important;
 }
 .gsc-comment-box-tabs .color-bg-canvas {
-  background: transparent !important;
+  background-color: transparent !important;
 }
 
-/* 输入框美化 */
+/* --- 修复 2：输入框本体 --- */
 .gsc-comment-box-textarea {
+  background-color: transparent !important; /* 关键：去白底 */
   border: 1px solid #e4e4e7 !important;
   border-radius: 8px !important;
   padding: 12px !important;
   font-size: 15px !important;
   line-height: 1.6 !important;
-  background: #ffffff !important;
 }
 
+/* 聚焦时稍微加深边框 */
 .gsc-comment-box-textarea:focus {
-  border-color: #a1a1aa !important; /* 聚焦时灰色加深 */
+  border-color: #a1a1aa !important;
   outline: none !important;
   box-shadow: none !important;
 }
 
-/* ====================
-   3. 按钮深度整形 (解决“丑陋黑色”的核心代码)
-   ==================== */
+/* --- 修复 3：右上角排序按钮 (最早/最新) --- */
+.gsc-timeline-filter .btn {
+  background-color: transparent !important; /* 关键：去白底 */
+  border: 1px solid #e4e4e7 !important;    /* 保留细边框 */
+  color: #71717a !important;
+  font-weight: normal !important;
+  font-size: 13px !important;
+}
+.gsc-timeline-filter .btn:hover {
+  border-color: #a1a1aa !important;
+  color: #18181b !important;
+}
 
-/* 针对 "Sign in with GitHub" 和 "Comment" 按钮 */
+/* --- 修复 4：底部 "使用 GitHub 登录" 按钮 --- */
 .btn-primary, .btn {
-  background-color: #ffffff !important;
+  background-color: transparent !important; /* 关键：去白底 */
   border: 1px solid #e4e4e7 !important;
-  color: #52525b !important; /* 文字深灰，不刺眼 */
+  color: #52525b !important;
   box-shadow: none !important;
-  font-weight: 500 !important;
-  border-radius: 6px !important;
-  transition: all 0.2s ease;
 }
 
-/* 悬停效果：保持极简，只加深边框和文字 */
 .btn-primary:hover, .btn:hover {
-  background-color: #ffffff !important;
-  border-color: #18181b !important; /* 悬停变黑边 */
-  color: #000000 !important;        /* 文字变纯黑 */
-  text-decoration: none !important;
+  background-color: transparent !important;
+  border-color: #18181b !important;
+  color: #000000 !important;
 }
 
-/* 修正按钮里的 SVG 图标颜色 (GitHub Logo) */
-.btn-primary svg, .btn svg {
-  fill: currentColor !important; /* 让图标跟随文字颜色变化 */
+/* 修正图标颜色 */
+.btn svg {
+  fill: currentColor !important;
 }
 
-/* 底部工具栏微调 */
+/* 移除评论框外层容器的一切样式 */
+.gsc-comment-box {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
 .gsc-comment-box-bottom {
   border: none !important;
   background: transparent !important;
-  padding-top: 12px !important;
 }
 
-/* 4. 强制深色模式下依然保持白底黑字风格 */
+/* ====================
+   3. 深色模式适配
+   ==================== */
 @media (prefers-color-scheme: dark) {
   body, main {
     background-color: transparent !important;
     color: #18181b !important;
   }
-  .gsc-comment-box-textarea, .btn-primary, .btn {
-    background-color: #ffffff !important;
+  /* 确保在系统深色模式下，输入框依然透明 (透出你博客的背景) */
+  .gsc-comment-box-textarea, .btn, .btn-primary {
+    background-color: transparent !important;
     color: #18181b !important;
   }
 }
