@@ -1,0 +1,32 @@
+---
+layout: ../../layouts/MarkdownPostLayout.astro
+title: '修改 Giscus'
+pubDate: 2025-12-15 21:58:00
+description: 'CSS 样式真难修改'
+tags: ["杂记"]
+---
+import Callout from '../../components/Callout.astro';
+import Figure from '../../components/Figure.astro';
+import testImg from '../../assets/images/test.jpg';
+
+## 为什么要修改
+
+原因很简单，我觉得 Giscus 的默认样式很丑陋，特别是在深色主题下，无法很好渲染。
+
+## 修改方法
+
+交给大模型去写就好了，我只负责验收和测试。
+
+## 遇到的问题
+
+如果 nginx 没有正确配置 CORS ，会导致 CSS 文件无法被加载，从而无法生效。另外，在 Astro 中使用相应的组件时，如果更改了 CSS 样式，记得修改一下版本号，否则浏览器还是会加载旧的样式文件，导致无法生效。
+
+## 总结
+
+为了好看，我已经刷了好多个 commit 了🤣
+
+<Figure 
+  src={testImg} 
+  alt="memo" 
+  caption="this is me" 
+/>
