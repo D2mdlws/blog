@@ -1,0 +1,9 @@
+/* public/giscus.css */
+main {
+  --color-prettylights-syntax-comment: #6e7781;
+  --color-btn-text: #52525b; /* primary color */
+  font-family: "Inter", system-ui, sans-serif;
+}
+.gsc-header {
+  font-family: "Charter", serif; /* 标题用衬线体 */
+}

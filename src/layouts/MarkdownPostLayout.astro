@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import Comments from '../components/Comments.astro';
 const { frontmatter } = Astro.props;
 ---
 <BaseLayout pageTitle={frontmatter.title}>
@@ -22,4 +23,6 @@ const { frontmatter } = Astro.props;
       <slot />
     </div>
   </article>
+
+  <Comments />
 </BaseLayout>

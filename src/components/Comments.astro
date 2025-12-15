@@ -1,0 +1,38 @@
+---
+// src/components/Comments.astro
+// 这里可以设为 props，也可以直接写死，看你喜好
+---
+
+<section class="mx-auto mt-20 max-w-2xl px-6">
+  <!-- 装饰性分割线 -->
+  <div class="flex items-center gap-4 mb-10">
+    <div class="h-px bg-gray-200 flex-grow"></div>
+    <span class="text-xs font-sans font-bold text-gray-300 tracking-widest uppercase">Discussion</span>
+    <div class="h-px bg-gray-200 flex-grow"></div>
+  </div>
+
+  <!-- Giscus 容器 -->
+  <div id="comments-section"></div>
+
+  <script>
+    // 动态加载 Giscus，防止拖慢页面首屏速度
+    const script = document.createElement('script');
+    script.src = "https://giscus.app/client.js";
+    script.setAttribute('data-repo', "D2mdlws/blog"); // <--- 修改这里
+    script.setAttribute('data-repo-id', "R_kgDOQo9eEw"); // <--- 修改这里
+    script.setAttribute('data-category', "Announcements");
+    script.setAttribute('data-category-id', "DIC_kwDOQo9eE84Cz0cw"); // <--- 修改这里
+    script.setAttribute('data-mapping', "pathname"); // 根据文章路径区分评论
+    script.setAttribute('data-strict', "0");
+    script.setAttribute('data-reactions-enabled', "1");
+    script.setAttribute('data-emit-metadata', "0");
+    script.setAttribute('data-input-position', "bottom");
+    script.setAttribute('data-theme', "https://blog.mdlws.net/giscus.css"); // 浅色主题
+    script.setAttribute('data-lang', "zh-CN");
+    script.setAttribute('data-loading', "lazy");
+    script.crossOrigin = "anonymous";
+    script.async = true;
+
+    document.getElementById('comments-section')?.appendChild(script);
+  </script>
+</section>

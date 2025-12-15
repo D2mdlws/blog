@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Comments from '../components/Comments.astro';
 
 // 1. 生成静态分页路径
 export async function getStaticPaths({ paginate }) {
@@ -113,6 +114,12 @@ const { page }: { page: PageProps } = Astro.props;
       )}
       
     </nav>
+  )}
+  
+  {page.currentPage === 1 && (
+    <div class="mt-24">
+       <Comments />
+    </div>
   )}
 
   <div class="h-12"></div>
