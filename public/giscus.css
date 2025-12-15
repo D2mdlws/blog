@@ -1,98 +1,79 @@
 /* public/giscus.css */
 
+/* 1. 强制重置所有基础变量 (无论深色浅色) */
 main {
-  /* =========================================
-     全局变量重写：极简去边框风格
-     ========================================= */
-
-  /* 1. 核心边框颜色：设为极浅的灰色，甚至接近透明 */
-  --color-border-default: #f4f4f5;      /* 默认边框：几不可见 */
-  --color-border-muted: #f4f4f5;
-  --color-border-primary: #e4e4e7;      /* 聚焦时的边框：淡灰 */
-
-  /* 2. 背景颜色 */
-  --color-canvas-default: transparent;  /* 整体背景透明 */
-  --color-canvas-overlay: #ffffff;      /* 弹窗背景 */
-  --color-canvas-subtle: #fafafa;       /* 悬停背景 */
-
-  /* 3. 文字颜色 */
-  --color-fg-default: #27272a;          /* 正文深灰 */
-  --color-fg-muted: #a1a1aa;            /* 提示文字浅灰 */
+  /* 定义我们想要的浅色/极简颜色 */
+  --light-bg: #ffffff;
+  --light-border: #f4f4f5; /* 极浅灰 */
+  --light-text: #27272a;   /* 深灰 */
+  --light-secondary: #a1a1aa;
   
-  /* 4. 输入框专属设置 (关键) */
-  --color-input-bg: #ffffff;            /* 输入框背景白 */
-  --color-input-border: #f4f4f5;        /* 输入框默认边框：极浅 */
+  /* 覆盖 Giscus 的核心变量 */
+  --color-canvas-default: transparent !important;
+  --color-canvas-overlay: var(--light-bg) !important;
+  --color-canvas-subtle: transparent !important;
+  --color-border-default: var(--light-border) !important;
+  --color-border-muted: var(--light-border) !important;
+  --color-fg-default: var(--light-text) !important;
+  --color-fg-muted: var(--light-secondary) !important;
+  --color-fg-subtle: var(--light-secondary) !important;
   
-  /* 5. 按钮样式 (登录/预览按钮) */
-  --color-btn-text: #52525b;
-  --color-btn-bg: #ffffff;
-  --color-btn-border: #e4e4e7;          /* 按钮边框：淡灰 */
-  --color-btn-hover-bg: #fafafa;
-  --color-btn-hover-border: #d4d4d8;
+  /* 按钮和输入框 */
+  --color-btn-text: var(--light-text) !important;
+  --color-btn-bg: var(--light-bg) !important;
+  --color-btn-border: var(--light-border) !important;
+  --color-input-bg: var(--light-bg) !important;
+  --color-input-border: var(--light-border) !important;
+  --color-input-text: var(--light-text) !important;
   
-  /* 6. 主色调 (提交按钮) */
-  --color-btn-primary-bg: #27272a;      /* 黑色背景 */
-  --color-btn-primary-text: #ffffff;
-  --color-btn-primary-border: #27272a;
-  
-  font-family: "Inter", system-ui, sans-serif;
+  /* 字体 */
+  font-family: "Inter", system-ui, sans-serif !important;
 }
 
-/* =========================================
-   深度定制类名 (强制覆盖 GitHub 原生样式)
-   ========================================= */
-
-/* 1. 评论输入大框 */
+/* 2. 核心去黑框逻辑 (直接针对类名) */
 .gsc-comment-box {
-  border-color: var(--color-border-default) !important;
-  background-color: transparent !important; /* 只有输入区域是白的，外框透明 */
-  box-shadow: none !important; /* 核心：去掉那个难看的阴影 */
+  background-color: transparent !important;
+  border: 1px solid var(--light-border) !important; /* 强制浅灰边框 */
+  box-shadow: none !important; /* 强制去掉阴影 */
+  border-radius: 8px !important;
 }
 
-/* 2. 输入框聚焦时的状态 */
+/* 聚焦时稍微深一点 */
 .gsc-comment-box:focus-within {
-  border-color: #d4d4d8 !important; /* 聚焦时稍微深一点点，不要变黑 */
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.03) !important; /* 极淡的柔光晕 */
+  border-color: #e4e4e7 !important;
+  box-shadow: none !important;
 }
 
-/* 3. 顶部的 "Write / Preview" 标签栏 */
+/* 3. 顶部 Tab 栏去边框 */
 .gsc-comment-box-tabs {
   border-color: transparent !important;
 }
-
 .gsc-comment-box-tabs .color-bg-canvas {
   background-color: transparent !important;
 }
 
-/* 4. 底部工具栏 (登录按钮那一排) */
+/* 4. 底部工具栏去边框 */
 .gsc-comment-box-bottom {
-  border-top: 1px solid #f4f4f5 !important; /* 分割线极细 */
+  border-top: 1px solid var(--light-border) !important;
   background-color: transparent !important;
 }
 
-/* 5. 按钮圆角优化 */
-.btn {
-  border-radius: 6px !important;
-  font-weight: normal !important;
-  font-size: 13px !important;
-}
-
-/* 6. 标题字体 */
-.gsc-header {
-  font-family: "Charter", serif;
-  font-weight: bold;
-}
-
-/* =========================================
-   深色模式保险丝 (防止系统设置干扰)
-   ========================================= */
+/* 5. 修正 Safari 深色模式下的文字颜色 */
+/* 这里的逻辑是：即便检测到 dark mode，也强制应用上面的浅色变量 */
 @media (prefers-color-scheme: dark) {
-  main {
-    --color-fg-default: #27272a !important;
-    --color-fg-muted: #a1a1aa !important;
-    --color-input-bg: #ffffff !important;
-    --color-btn-text: #52525b !important;
-    --color-border-default: #f4f4f5 !important;
-    --color-canvas-default: transparent !important;
+  body, main {
+    background-color: transparent !important;
+    color: var(--light-text) !important;
+  }
+  
+  /* 强制输入框背景变白，文字变黑 */
+  .gsc-comment-box textarea {
+    background-color: #ffffff !important;
+    color: #27272a !important;
+  }
+  
+  /* 强制按钮文字变黑 */
+  .gsc-comment-box button {
+    color: #52525b !important;
   }
 }
