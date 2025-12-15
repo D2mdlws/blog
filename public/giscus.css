@@ -1,50 +1,58 @@
 /* public/giscus.css */
 
-/* 1. 强制重置所有基础变量 (无论深色浅色) */
+/* 核心策略：不使用任何 @media (prefers-color-scheme) 查询 */
+/* 无论系统什么颜色，强制使用以下变量 */
+
 main {
-  /* 定义我们想要的浅色/极简颜色 */
-  --light-bg: #ffffff;
-  --light-border: #f4f4f5; /* 极浅灰 */
-  --light-text: #27272a;   /* 深灰 */
-  --light-secondary: #a1a1aa;
-  
-  /* 覆盖 Giscus 的核心变量 */
+  /* 1. 强制浅色变量 */
+  --color-prettylights-syntax-comment: #6e7781;
+  --color-prettylights-syntax-entity: #8250df;
+  --color-prettylights-syntax-keyword: #cf222e;
+  --color-prettylights-syntax-string: #0a3069;
+  --color-prettylights-syntax-variable: #953800;
+
   --color-canvas-default: transparent !important;
-  --color-canvas-overlay: var(--light-bg) !important;
-  --color-canvas-subtle: transparent !important;
-  --color-border-default: var(--light-border) !important;
-  --color-border-muted: var(--light-border) !important;
-  --color-fg-default: var(--light-text) !important;
-  --color-fg-muted: var(--light-secondary) !important;
-  --color-fg-subtle: var(--light-secondary) !important;
+  --color-canvas-overlay: #ffffff !important;
+  --color-canvas-subtle: #f6f8fa !important;
   
-  /* 按钮和输入框 */
-  --color-btn-text: var(--light-text) !important;
-  --color-btn-bg: var(--light-bg) !important;
-  --color-btn-border: var(--light-border) !important;
-  --color-input-bg: var(--light-bg) !important;
-  --color-input-border: var(--light-border) !important;
-  --color-input-text: var(--light-text) !important;
-  
-  /* 字体 */
+  --color-border-default: #e4e4e7 !important; /* 极浅灰 */
+  --color-border-muted: #e4e4e7 !important;
+
+  /* 2. 强制文字颜色为深灰（防止深色模式变白） */
+  --color-fg-default: #27272a !important;
+  --color-fg-muted: #57606a !important;
+  --color-fg-subtle: #6e7781 !important;
+
+  /* 3. 强制输入框背景为白 */
+  --color-input-bg: #ffffff !important;
+  --color-input-border: #e4e4e7 !important;
+  --color-input-text: #27272a !important;
+
+  /* 4. 按钮样式 */
+  --color-btn-text: #24292f !important;
+  --color-btn-bg: #f6f8fa !important;
+  --color-btn-border: #e4e4e7 !important;
+  --color-btn-primary-bg: #27272a !important;
+  --color-btn-primary-text: #ffffff !important;
+
   font-family: "Inter", system-ui, sans-serif !important;
 }
 
-/* 2. 核心去黑框逻辑 (直接针对类名) */
+/* 评论框去黑框、去阴影 */
 .gsc-comment-box {
   background-color: transparent !important;
-  border: 1px solid var(--light-border) !important; /* 强制浅灰边框 */
-  box-shadow: none !important; /* 强制去掉阴影 */
-  border-radius: 8px !important;
+  border: 1px solid #e4e4e7 !important;
+  box-shadow: none !important;
+  border-radius: 6px;
 }
 
-/* 聚焦时稍微深一点 */
+/* 聚焦状态 */
 .gsc-comment-box:focus-within {
-  border-color: #e4e4e7 !important;
+  border-color: #a1a1aa !important;
   box-shadow: none !important;
 }
 
-/* 3. 顶部 Tab 栏去边框 */
+/* 隐藏顶部 Tab 边框 */
 .gsc-comment-box-tabs {
   border-color: transparent !important;
 }
@@ -52,28 +60,15 @@ main {
   background-color: transparent !important;
 }
 
-/* 4. 底部工具栏去边框 */
+/* 隐藏底部边框 */
 .gsc-comment-box-bottom {
-  border-top: 1px solid var(--light-border) !important;
+  border-top: 1px solid #e4e4e7 !important;
   background-color: transparent !important;
 }
 
-/* 5. 修正 Safari 深色模式下的文字颜色 */
-/* 这里的逻辑是：即便检测到 dark mode，也强制应用上面的浅色变量 */
+/* 强制覆盖深色模式下的默认行为 */
 @media (prefers-color-scheme: dark) {
-  body, main {
-    background-color: transparent !important;
-    color: var(--light-text) !important;
-  }
-  
-  /* 强制输入框背景变白，文字变黑 */
-  .gsc-comment-box textarea {
-    background-color: #ffffff !important;
-    color: #27272a !important;
-  }
-  
-  /* 强制按钮文字变黑 */
-  .gsc-comment-box button {
-    color: #52525b !important;
+  body {
+    color: #27272a !important; /* 强行变黑字 */
   }
 }
