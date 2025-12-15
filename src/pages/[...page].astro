@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// 1. 生成静态分页路径
+export async function getStaticPaths({ paginate }) {
+  const allPosts = Object.values(import.meta.glob('./posts/*.{md,mdx}', { eager: true }));
+
+  // 按日期降序排列
+  const sortedPosts = allPosts.sort((a: any, b: any) => 
+    new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf()
+  );
+
+  // 使用 Astro 内置的 paginate 函数
+  return paginate(sortedPosts, { pageSize: 4 });
+}
+
+// 2. 获取分页数据
+interface PageProps {
+  currentPage: number;
+  data: Array<any>;
+  url: {
+    prev: string | null;
+    next: string | null;
+  };
+  lastPage: number;
+}
+
+const { page }: { page: PageProps } = Astro.props;
+// page.data 包含了当前页面的文章列表
+// page.currentPage 是当前页码
+// page.url.prev 和 page.url.next 是上一页/下一页的链接
+---
+
+<BaseLayout pageTitle={page.currentPage === 1 ? "我的主页" : `文章列表 - 第 ${page.currentPage} 页`}>
+  
+  <!-- 3. Hero 区域：只在第一页显示 -->
+  {page.currentPage === 1 && (
+    <>
+      <section class="mb-20 mt-8">
+        <div class="border-l-2 border-gray-200 pl-6 py-1">
+          <p class="text-xl text-gray-800 font-serif leading-relaxed">
+            “有趣的灵魂千篇一律”
+          </p>
+          <p class="text-sm text-gray-400 mt-2 font-sans uppercase tracking-widest">
+            好看的皮囊万里挑一
+          </p>
+        </div>
+      </section>
+
+      <div class="flex items-center gap-4 mb-12">
+        <span class="text-xs font-sans font-bold text-gray-300 tracking-widest uppercase">Latest Writing</span>
+        <div class="h-px bg-gray-100 flex-grow"></div>
+      </div>
+    </>
+  )}
+
+  <!-- 4. 文章列表：遍历 page.data 而不是 allPosts -->
+  <section class="space-y-16">
+    {page.data.map((post: any) => (
+      <article class="group relative">
+        <a href={post.url} class="block focus:outline-none">
+          <header class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-3 gap-2">
+            <h2 class="text-2xl font-bold text-gray-800 font-serif group-hover:text-black transition-colors">
+              {post.frontmatter.title}
+            </h2>
+            <time class="text-sm text-gray-400 font-mono shrink-0">
+              {post.frontmatter.pubDate.toString().slice(0,10)}
+            </time>
+          </header>
+
+          <p class="text-gray-500 leading-relaxed font-serif mb-4">
+            {post.frontmatter.description}
+          </p>
+
+          <div class="flex items-center gap-3">
+            {post.frontmatter.tags.map((tag: any) => (
+              <span class="text-xs text-gray-400 font-sans hover:text-gray-600 transition-colors">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        </a>
+      </article>
+    ))}
+  </section>
+
+  <!-- 5. 底部页码导航 -->
+  <!-- 只有当总页数大于1时才显示 -->
+  {page.lastPage > 1 && (
+    <nav class="mt-24 pt-8 border-t border-gray-100 flex justify-between items-center text-sm font-sans text-gray-500">
+      
+      <!-- 上一页按钮 -->
+      {page.url.prev ? (
+        <a href={page.url.prev} class="hover:text-black transition-colors flex items-center gap-2 group">
+          <span class="group-hover:-translate-x-1 transition-transform">←</span> Previous
+        </a>
+      ) : (
+        <span class="text-gray-300 cursor-not-allowed">← Previous</span>
+      )}
+
+      <!-- 当前页码指示 -->
+      <span class="font-mono text-xs text-gray-300">
+        Page {page.currentPage} of {page.lastPage}
+      </span>
+
+      <!-- 下一页按钮 -->
+      {page.url.next ? (
+        <a href={page.url.next} class="hover:text-black transition-colors flex items-center gap-2 group">
+          Next <span class="group-hover:translate-x-1 transition-transform">→</span>
+        </a>
+      ) : (
+        <span class="text-gray-300 cursor-not-allowed">Next →</span>
+      )}
+      
+    </nav>
+  )}
+
+  <div class="h-12"></div>
+</BaseLayout>

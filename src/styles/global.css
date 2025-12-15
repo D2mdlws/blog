@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+/* 3. 配置你的设计主题 (替代原本的 tailwind.config.js) */
+@theme {
+  /* 自定义颜色变量 */
+  --color-bg: #fafafa;
+  --color-text: #27272a;
+  --color-primary: #52525b;
+
+  /* 自定义字体栈 */
+  --font-serif: "Charter", "Bitstream Charter", "Sitka Text", "Cambria", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+/* 4. 一些全局的基础样式修正 */
+body {
+  @apply bg-bg text-text font-serif antialiased;
+}

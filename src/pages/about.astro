@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const pageTitle = "关于我";
+---
+<BaseLayout pageTitle={pageTitle}>
+
+  <!-- 页面头部 -->
+  <header class="mb-12 text-center">
+    <h1 class="text-4xl font-bold font-sans text-gray-900">About Me</h1>
+  </header>
+
+  <!-- 内容区域 -->
+  <article class="prose prose-slate prose-lg max-w-none prose-headings:font-sans prose-a:text-gray-700 hover:prose-a:text-black prose-a:decoration-gray-300 prose-a:underline-offset-4">
+    
+    <h2>我是谁</h2>
+    <p>
+      浙江大学计算机科学与技术专业本科四年级。以前喜欢了解体系结构和操作系统相关的内容，后来转去做视觉和具身智能了。
+    </p>
+    
+    <hr class="my-10 border-gray-100" />
+    
+    <h2>关于本站</h2>
+    <p>
+      本网站部署在某个免费白嫖的服务器上，原本想使用 hexo 框架的，但是懒得折腾，于是让 Gemini 帮我生成了前端界面。它使用 <a href="https://astro.build/" target="_blank">Astro</a> 框架构建，通过 <a href="https://tailwindcss.com/" target="_blank">Tailwind CSS</a> 实现样式。
+    </p>
+
+    <h2>联系我</h2>
+    <p>
+      如果你对我的文章内容有任何疑问、建议，或者希望交流，欢迎通过以下方式与我联系：
+    </p>
+    <ul>
+      <li><strong>Email</strong>: <a href="mailto:whoami@mail.io">whoami@mail.io</a></li>
+    </ul>
+
+  </article>
+
+</BaseLayout>

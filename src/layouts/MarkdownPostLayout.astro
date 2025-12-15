@@ -1,0 +1,25 @@
+---
+import BaseLayout from './BaseLayout.astro';
+const { frontmatter } = Astro.props;
+---
+<BaseLayout pageTitle={frontmatter.title}>
+  <article>
+    <!-- 文章头部信息 -->
+    <header class="mb-10 text-center">
+      <h1 class="text-3xl font-bold mb-4 font-sans text-gray-900">{frontmatter.title}</h1>
+      <div class="flex justify-center gap-4 text-sm text-gray-500 font-sans">
+        <p>{frontmatter.pubDate.toString().slice(0,10)}</p>
+        <div class="flex gap-2">
+          {frontmatter.tags.map((tag: string) => (
+            <span class="bg-gray-100 px-2 py-0.5 rounded text-xs text-gray-600">#{tag}</span>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    <!-- 文章正文：prose-slate 设定灰度，prose-lg 增大字号利于阅读 -->
+    <div class="prose prose-slate prose-lg max-w-none prose-headings:font-sans prose-a:text-blue-600 hover:prose-a:text-blue-400 prose-img:rounded-lg prose-img:shadow-sm">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

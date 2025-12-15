@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+
+// 接收参数：
+// src: 图片对象 (import 进来的) 或 字符串路径
+// alt: 图片描述
+// caption: 图片下方的注脚文字
+const { src, alt, caption } = Astro.props;
+---
+
+<figure class="my-8">
+  <!-- 图片容器：加一个极淡的边框和圆角 -->
+  <div class="rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
+    <!-- 
+      Astro 的 <Image /> 组件：
+      它会自动处理宽高比，防止页面抖动 (CLS)
+    -->
+    <Image 
+      src={src} 
+      alt={alt} 
+      class="w-full h-auto block" 
+    />
+  </div>
+
+  <!-- 注脚：极简风的关键 -->
+  {caption && (
+    <figcaption class="mt-3 text-center text-sm text-gray-400 font-sans italic tracking-wide">
+      {caption}
+    </figcaption>
+  )}
+</figure>

@@ -6,9 +6,20 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "postbuild": "pagefind --site dist"
   },
   "dependencies": {
-    "astro": "^5.16.5"
+    "@astrojs/mdx": "^4.3.13",
+    "@pagefind/default-ui": "^1.4.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.16.5",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "pagefind": "^1.4.0"
   }
 }

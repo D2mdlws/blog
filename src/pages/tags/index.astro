@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// 1. 获取所有文章
+const allPosts = Object.values(import.meta.glob('../posts/*.{md,mdx}', { eager: true }));
+
+// 2. 提取所有标签并去重
+// map: 取出每篇文章的 tags 数组
+// flat: 把 [[a,b], [c]] 拍平成 [a,b,c]
+// Set: 去重
+const tags = [...new Set(allPosts.map((post) => post.frontmatter.tags).flat())];
+
+const pageTitle = "标签索引";
+---
+
+<BaseLayout pageTitle={pageTitle}>
+  <div class="mb-12">
+    <h1 class="text-3xl font-bold font-sans mb-4">Tags</h1>
+    <p class="text-gray-500 font-serif italic">目前共收录了 {tags.length} 个分类。</p>
+  </div>
+
+  <!-- 标签展示区 -->
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    {tags.map((tag) => (
+      <a 
+        href={`/tags/${tag}`} 
+        class="group flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-gray-900 hover:shadow-sm transition-all bg-white"
+      >
+        <span class="font-sans text-gray-700 group-hover:text-black">
+          {tag}
+        </span>
+        <!-- 这里的箭头加了一点点动画位移细节 -->
+        <span class="text-gray-300 group-hover:text-gray-900 group-hover:translate-x-1 transition-transform">
+          →
+        </span>
+      </a>
+    ))}
+  </div>
+</BaseLayout>

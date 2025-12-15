@@ -1,0 +1,48 @@
+---
+import '../styles/global.css';
+import Search from '../components/Search.astro';
+const { pageTitle } = Astro.props;
+---
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <!-- 引入 KaTeX 样式表，用于正确渲染数学公式 -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    />
+  </head>
+  <body class="bg-bg text-text font-serif antialiased selection:bg-gray-200">
+    <!-- 核心容器：最大宽度限制 + 水平居中 -->
+    <div class="max-w-2xl mx-auto px-6 py-12 min-h-screen flex flex-col">
+      
+      <!-- 极简头部 -->
+      <header class="mb-16 flex justify-between items-baseline">
+        <a href="/" class="text-xl font-bold tracking-tight hover:text-gray-500 transition-colors font-sans">
+          WHOAMI?
+        </a>
+        <nav class="flex items-center gap-6 text-sm font-sans text-gray-500">
+          <a href="/" class="hover:text-black transition-colors">Home</a>
+          <a href="/tags" class="hover:text-black transition-colors">Tags</a>
+          <a href="/about" class="hover:text-black transition-colors">About</a>
+
+          <Search />
+        </nav>
+      </header>
+
+      <!-- 内容插槽 -->
+      <main class="flex-grow">
+        <slot />
+      </main>
+
+      <!-- 底部额外信息 -->
+      <footer class="mt-20 pt-8 border-t border-gray-200 text-xs text-gray-400 font-sans text-center">
+        <p>&copy; 2025 Built with Astro & Tailwind & Gemini. Deployed on my own server.</p>
+      </footer>
+    </div>
+  </body>
+</html>

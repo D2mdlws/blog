@@ -1,0 +1,131 @@
+---
+import '@pagefind/default-ui/css/ui.css';
+---
+
+<!-- 1. 触发按钮：放在导航栏里的放大镜 -->
+<button id="search-trigger" class="text-gray-400 hover:text-black transition-colors focus:outline-none" aria-label="Search">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+  </svg>
+</button>
+
+<!-- 2. 模态框：默认隐藏 -->
+<dialog id="search-dialog" class="bg-transparent backdrop:bg-white/80 backdrop:backdrop-blur-sm p-0 m-0 w-full h-full max-w-full max-h-full fixed inset-0 z-50 flex items-center justify-center open:flex hidden">
+  
+  <!-- 点击背景关闭 -->
+  <div class="fixed inset-0" id="dialog-backdrop"></div>
+
+  <!-- 搜索框容器 -->
+  <div class="relative bg-white w-full max-w-lg mx-4 rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div class="p-4" id="search-container"></div>
+    <div class="px-4 py-2 bg-gray-50 border-t border-gray-100 text-xs text-gray-400 font-sans flex justify-between">
+      <span>Type to search...</span>
+      <span>ESC to close</span>
+    </div>
+  </div>
+</dialog>
+
+<!-- 3. 脚本逻辑 -->
+<script>
+  // 仅在客户端运行
+  const trigger = document.getElementById('search-trigger');
+  const dialog = document.getElementById('search-dialog') as HTMLDialogElement;
+  const backdrop = document.getElementById('dialog-backdrop');
+
+  // 打开搜索
+  trigger?.addEventListener('click', () => {
+    dialog?.showModal();
+    dialog?.classList.remove('hidden');
+    // 自动聚焦输入框 (Pagefind 加载需要一点时间，所以延时一下)
+    setTimeout(() => {
+        const input = dialog.querySelector('input');
+        if(input) input.focus();
+    }, 100);
+  });
+
+  // 关闭搜索
+  const closeSearch = () => {
+    dialog?.close();
+    dialog?.classList.add('hidden');
+  };
+
+  backdrop?.addEventListener('click', closeSearch);
+  
+  // 监听 ESC
+  dialog?.addEventListener('close', () => {
+      dialog.classList.add('hidden');
+  });
+
+  // 初始化 Pagefind
+  // 注意：Pagefind 是在构建后生成的，开发环境下可能需要先 run build
+  window.addEventListener('DOMContentLoaded', async () => {
+    // 动态导入 Pagefind UI
+    // @ts-ignore
+    const { PagefindUI } = await import("@pagefind/default-ui");
+    
+    new PagefindUI({
+      element: "#search-container",
+      showSubResults: true,
+      showImages: false, // 极简风格不显示缩略图
+      translations: {
+        placeholder: "Search posts, tags...",
+        zero_results: "No content found for [SEARCH_TERM]"
+      }
+    });
+  });
+</script>
+
+<!-- 4. 样式覆盖：把 Pagefind 默认的丑 UI 改成极简风 -->
+<style is:global>
+  /* 覆盖 Pagefind 的 CSS 变量以匹配 Tailwind */
+  :root {
+    --pagefind-ui-scale: 0.8;
+    --pagefind-ui-primary: #52525b; /* primary color */
+    --pagefind-ui-text: #27272a;
+    --pagefind-ui-background: #ffffff;
+    --pagefind-ui-border: #f3f4f6;
+    --pagefind-ui-tag: #f3f4f6;
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 8px;
+    --pagefind-ui-font: 'Inter', sans-serif;
+  }
+
+  /* 隐藏 Pagefind 自带的 logo */
+  .pagefind-ui__drawer {
+     gap: 1rem !important;
+  }
+  
+  /* 输入框样式 */
+  .pagefind-ui__search-input {
+    font-weight: normal !important;
+    font-size: 1.1rem !important;
+    padding-left: 1rem !important;
+  }
+  
+  /* 结果列表样式 */
+  .pagefind-ui__result {
+    border: none !important;
+    padding: 0.8rem 0 !important;
+  }
+  
+  .pagefind-ui__result-title {
+    font-family: 'Charter', serif !important; /* 标题用衬线体 */
+    font-weight: bold !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .pagefind-ui__result-excerpt {
+    font-family: 'Inter', sans-serif !important;
+    color: #a1a1aa !important;
+    font-size: 0.9rem !important;
+  }
+
+  mark {
+    background-color: transparent !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    text-decoration: underline;
+    text-decoration-color: #d4d4d8;
+    text-decoration-thickness: 2px;
+  }
+</style>

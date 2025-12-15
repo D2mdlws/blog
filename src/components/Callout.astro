@@ -1,0 +1,61 @@
+---
+// src/components/Callout.astro
+const { type = 'info', title } = Astro.props;
+
+// 定义极简风格的配色方案 (低饱和度、细边框)
+const styles = {
+  info: {
+    container: 'bg-gray-50 border-gray-200',
+    icon: 'text-gray-500',
+    title: 'text-gray-800'
+  },
+  tip: {
+    container: 'bg-emerald-50/50 border-emerald-100', // 极淡的绿色
+    icon: 'text-emerald-600',
+    title: 'text-emerald-800'
+  },
+  warning: {
+    container: 'bg-amber-50/50 border-amber-100', // 极淡的琥珀色
+    icon: 'text-amber-600',
+    title: 'text-amber-800'
+  },
+  error: {
+    container: 'bg-rose-50/50 border-rose-100', // 极淡的玫瑰色
+    icon: 'text-rose-600',
+    title: 'text-rose-800'
+  }
+};
+
+const currentStyle = styles[type] || styles.info;
+
+// 简单的 SVG 图标映射
+const icons = {
+  info: `<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />`,
+  tip: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 2.625v-2.133c.208.104.425.2.646.287l.812.325a1.875 1.875 0 002.687-1.875 2.25 2.25 0 00-.159-.536l-.885-2.656a2.25 2.25 0 00-4.266 0l-.885 2.656a2.25 2.25 0 00-.16.536 1.875 1.875 0 002.686 1.875c.221-.087.438-.183.646-.287v2.132m0 0a2.25 2.25 0 00-4.5 0m4.5 0a2.25 2.25 0 00-4.5 0m4.5 0h.008v.008H12v-.008zM12 10.5a1.125 1.125 0 110-2.25 1.125 1.125 0 010 2.25z" />`,
+  warning: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />`,
+  error: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />`
+};
+---
+
+<!-- 
+  not-prose: 这是一个关键类名。
+  它告诉 Tailwind Typography 插件：“不要用你默认的 Markdown 样式覆盖我这里的样式”。
+-->
+<div class={`not-prose my-6 rounded border p-4 ${currentStyle.container}`}>
+  <div class="flex gap-3">
+    <!-- 图标 -->
+    <div class={`shrink-0 w-5 h-5 mt-0.5 ${currentStyle.icon}`}>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
+        <Fragment set:html={icons[type] || icons.info} />
+      </svg>
+    </div>
+    
+    <!-- 内容 -->
+    <div class="flex-grow">
+      {title && <h3 class={`font-sans font-bold text-sm mb-1 ${currentStyle.title}`}>{title}</h3>}
+      <div class="text-sm leading-relaxed text-gray-600 font-serif">
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>
