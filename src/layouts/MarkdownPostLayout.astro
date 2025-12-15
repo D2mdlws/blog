@@ -2,6 +2,8 @@
 import BaseLayout from './BaseLayout.astro';
 import Comments from '../components/Comments.astro';
 const { frontmatter } = Astro.props;
+
+const currentUrl = Astro.url.href;
 ---
 <BaseLayout pageTitle={frontmatter.title}>
   <article>
@@ -22,6 +24,46 @@ const { frontmatter } = Astro.props;
     <div class="prose prose-slate prose-lg max-w-none prose-headings:font-sans prose-a:text-blue-600 hover:prose-a:text-blue-400 prose-img:rounded-lg prose-img:shadow-sm">
       <slot />
     </div>
+
+    <!-- ============================================ -->
+    <div class="mt-16 p-6 bg-gray-50 rounded-lg border border-gray-100 font-sans text-sm text-gray-500">
+      <div class="flex flex-col gap-2">
+        
+        <!-- 版权所属 -->
+        <div>
+          <span class="font-bold text-gray-700">本文作者：</span>
+          <span>mdlws</span>
+        </div>
+
+        <!-- 本文链接 -->
+        <div>
+          <span class="font-bold text-gray-700">本文链接：</span>
+          <a href={currentUrl} class="hover:text-blue-600 break-all transition-colors underline decoration-gray-300 underline-offset-4">
+            {currentUrl}
+          </a>
+        </div>
+
+        <!-- 版权协议 -->
+        <div class="mt-2 pt-2 border-t border-gray-200">
+          <span class="font-bold text-gray-700">版权声明：</span>
+          <span>
+            本博客所有文章除特别声明外，均采用 
+            <a 
+              href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="text-gray-800 hover:text-black font-semibold border-b border-gray-300 hover:border-black transition-colors"
+            >
+              CC BY-NC-SA 4.0
+            </a> 
+            许可协议。转载请注明出处。
+          </span>
+        </div>
+
+      </div>
+    </div>
+    <!-- ============================================ -->
+
   </article>
 
   <Comments />
