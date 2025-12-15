@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Disallow: /drafts/
+# Disallow: /private/
+
+Sitemap: https://blog.mdlws.net/sitemap-index.xml
