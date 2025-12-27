@@ -1,0 +1,79 @@
+---
+// src/components/MusicCard.astro
+import { Image } from 'astro:assets';
+const { cover, title, artist, album, date, url } = Astro.props;
+---
+
+<a 
+  href={url || "#"} 
+  target="_blank" 
+  class="group block not-prose my-8 relative decoration-none"
+>
+  <!-- 核心容器：采用 Flex 布局，移动端垂直，桌面端水平 -->
+  <div class="
+    flex flex-col sm:flex-row items-center sm:items-stretch gap-6 
+    p-4 sm:p-5 rounded-2xl 
+    bg-white border border-gray-100 
+    shadow-[0_2px_8px_rgba(0,0,0,0.04)] 
+    hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-1 
+    transition-all duration-300 ease-out
+  ">
+    
+    <!-- 1. 专辑封面 -->
+    <div class="relative shrink-0 w-32 h-32 sm:w-36 sm:h-36 shadow-sm rounded-xl overflow-hidden border border-gray-100/50 group-hover:shadow-md transition-shadow">
+      <Image 
+        src={cover} 
+        alt={title} 
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+      />
+
+      <!-- 封面中心的装饰性“黑胶/播放”圆点 (可选细节) -->
+      <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10 backdrop-blur-[2px]">
+         <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm">
+            <svg class="w-3 h-3 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+         </div>
+      </div>
+    </div>
+
+    <!-- 2. 信息区域 -->
+    <div class="flex flex-col justify-center text-center sm:text-left flex-grow py-1 min-w-0 w-full">
+      
+      <!-- 歌名：使用 Sans 字体，字重较大，支持多语言 -->
+      <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1 truncate leading-tight font-music tracking-tight">
+        {title}
+      </h3>
+      
+      <!-- 艺术家：稍微小一点，深灰色 -->
+      <p class="text-base text-gray-600 font-medium mb-3 font-music">
+        {artist}
+      </p>
+
+      <!-- 分割线 -->
+      <div class="w-12 h-px bg-gray-200 mx-auto sm:mx-0 mb-4"></div>
+
+      <!-- 元数据：专辑与日期，使用 Serif 增加杂志感，或者极小 Sans -->
+      <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs text-gray-400 font-sans tracking-wide uppercase">
+        <div class="flex items-center justify-center sm:justify-start gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+          <span class="truncate max-w-[150px]">{album}</span>
+        </div>
+        <div class="hidden sm:block text-gray-300">•</div>
+        <div class="flex items-center justify-center sm:justify-start gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <span>{date}</span>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</a>
+
+<style>
+  /* 
+    专门优化的字体栈：
+    优先使用系统级高品质字体，确保日文(Hiragino Sans)和中文(PingFang SC)显示完美 
+  */
+  .font-music {
+    font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans JP", sans-serif;
+  }
+</style>

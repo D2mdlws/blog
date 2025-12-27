@@ -74,4 +74,79 @@ const currentUrl = Astro.url.href;
   </article>
 
   <Comments />
+  <script>
+    // 等待页面内容加载完成
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. 找到文章内所有的 <pre> 标签 (Shiki 生成的代码块)
+      const pres = document.querySelectorAll('article pre');
+
+      pres.forEach((pre) => {
+        // 防止重复处理
+        if (pre.parentNode.classList.contains('code-block-content')) return;
+
+        // 2. 获取代码语言 (Shiki 通常会给 code 加 class="language-js")
+        const code = pre.querySelector('code');
+        // 从 class 中提取语言，比如 "language-js" -> "JS"
+        // 如果找不到，默认为 "CODE"
+        let language = 'CODE';
+        if (code) {
+          const langClass = Array.from(code.classList).find(c => c.startsWith('language-'));
+          if (langClass) {
+            language = langClass.replace('language-', '').toUpperCase();
+          }
+        }
+
+        // 3. 创建结构
+        // 目标结构:
+        // <div class="code-block-wrapper">
+        //    <div class="code-block-header"> ... </div>
+        //    <div class="code-block-content"> <pre>...</pre> </div>
+        // </div>
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrapper';
+
+        const header = document.createElement('div');
+        header.className = 'code-block-header';
+
+        // 头部内容：语言标签 + 折叠按钮
+        header.innerHTML = `
+          <span class="code-language-label">${language}</span>
+          <button class="code-collapse-btn" aria-label="Toggle code">
+            <span>Hide</span>
+            <svg class="code-collapse-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        `;
+
+        const content = document.createElement('div');
+        content.className = 'code-block-content';
+
+        // 4. 移动 DOM 元素
+        // 将 wrapper 插入到 pre 之前
+        pre.parentNode.insertBefore(wrapper, pre);
+        // 将 pre 移入 content
+        content.appendChild(pre);
+        // 将 header 和 content 移入 wrapper
+        wrapper.appendChild(header);
+        wrapper.appendChild(content);
+
+        // 5. 添加交互逻辑
+        const btn = header.querySelector('.code-collapse-btn');
+        const btnText = btn.querySelector('span');
+        
+        header.addEventListener('click', () => {
+          wrapper.classList.toggle('collapsed');
+          
+          // 更新按钮文字
+          if (wrapper.classList.contains('collapsed')) {
+            btnText.textContent = 'Show';
+          } else {
+            btnText.textContent = 'Hide';
+          }
+        });
+      });
+    });
+  </script>
 </BaseLayout>

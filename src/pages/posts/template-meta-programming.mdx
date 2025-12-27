@@ -1,0 +1,195 @@
+---
+layout: ../../layouts/MarkdownPostLayout.astro
+title: 'Meta Programming in C++'
+pubDate: 2025-12-16 21:58:00
+description: 'Remember Erwin Unruh?'
+tags: ["Programming", "C++"]
+---
+import Callout from '../../components/Callout.astro';
+import Figure from '../../components/Figure.astro';
+
+## 1. Motivation
+
+This investigation was prompted by a YouTube video that discussed various critiques of the C++ language, 
+ranging from its syntax to its building systems. During a segment on the complexities of templates and the 
+Curiously Recurring Template Pattern (CRTP), the presenter mentioned Erwin Unruh. 
+Unruh was the first to demonstrate that C++ templates could be utilized to perform computations, specifically, 
+calculating prime numbers, at compile time.
+
+While I was familiar with templates for generic programming, 
+having used them extensively in CUDA development (e.g., with CUTLASS), 
+their application in metaprogramming was a concept I had not yet explored in depth. 
+This prompted me to implement Unruh's technique to gain a practical understanding.
+
+## 2. Erwin Unruh's Contribution
+
+In 1994, Erwin Unruh submitted a code sample to the C++ standards committee. 
+This code demonstrated that it was possible to calculate prime numbers during the compilation phase.
+Intrigued by this concept, I decided to replicate the implementation.
+
+## 3. Theoretical Basis
+
+To understand the implementation, it is essential to first grasp the underlying principle: 
+C++ templates are Turing-complete. This is an emergent property, discovered by the user community, 
+which means the template system can be used to implement any algorithm.
+
+A Turing-complete system requires three capabilities:
+
+- Sequential Execution: The ability to execute operations in a defined order.
+- Conditional Branching: The ability to make decisions based on certain conditions.
+- Looping/Recursion: The ability to repeat operations.
+
+In C++ template metaprogramming, these are realized as follows:
+
+- Sequence is managed through the order of template instantiations, with state stored in template arguments.
+- Conditionals are implemented using template specialization.
+- Looping is achieved via recursive template instantiation.
+
+With these three mechanisms, the template system becomes a computational framework.
+
+## 4. Code Implementation
+
+```cpp
+#include <iostream>
+
+template<int N, int D, int Result>
+struct CheckHelper;
+
+template<int N, int D>
+struct CheckHelper<N, D, 1> {
+    enum { value = 0 };
+};
+
+template<int N, int D>
+struct Check {
+    enum { value = CheckHelper<N, D, (N % D == 0)>::value };
+};
+
+template<int N, int D>
+struct CheckHelper<N, D, 0> {
+    enum { value = Check<N, D - 1>::value };
+};
+
+template<int N>
+struct Check<N, 1> {
+    enum { value = 1 };
+};
+
+template<int N>
+struct IsPrime {
+    enum { value = Check<N, N / 2>::value};
+};
+
+template<> struct IsPrime<2> { enum {value = 1}; };
+template<> struct IsPrime<1> { enum {value = 0}; };
+
+template<int i>
+struct Prime_Number_Is;
+
+template<int IsPrimeResule, int Num>
+struct Printer {};
+
+template<int Num>
+struct Printer<1, Num> {
+    Prime_Number_Is<Num> probe;
+};
+
+template <int I>
+struct Loop {
+    enum { prev = Loop<I - 1>::dummy };
+
+    enum { is_prime = IsPrime<I>::value };
+
+    Printer<is_prime, I> p;
+
+    enum { dummy = 1 };
+};
+
+template<>
+struct Loop<1> {
+    enum { dummy = 1 };
+};
+
+int main() {
+    Loop<30> worker;
+    return 0;
+}
+```
+
+## 5. Code Analysis
+
+The code can be logically divided into three components.
+
+### Component 1: Auxiliary Templates
+
+The `Check` and `CheckHelper` structs form the core logic for determining primality. 
+Additionally, the `Printer` struct is designed to trigger a compile-time error for specific template instantiations, 
+which serves as the mechanism for outputting the calculated prime numbers.
+
+### Component 2: Wrapper Templates
+
+The `IsPrime` and `Loop` structs act as wrappers that are instantiated from `main`. 
+`IsPrime` initiates the primality check by instantiating the `Check` struct. 
+This process is analogous to a function call, 
+where template parameters serve as arguments and the template instantiation chain substitutes for a traditional call stack.
+
+### Component 3: Execution Flow
+
+The entire computation is driven by the instantiation of the `Loop` struct. The process unfolds as follows:
+
+The instantiation of `Loop<I>` depends on `Loop<I - 1>`, creating a recursive instantiation chain. 
+This continues until the base case, the specialization `Loop<1>`, is reached.
+
+Upon reaching `Loop<1>`, the compiler proceeds with the instantiation of `Loop<2>`.
+It evaluates `enum { is_prime = IsPrime<2>::value };`. This instantiates `IsPrime<2>`, which uses its specialization to resolve `is_prime` to 1.
+
+The compiler continues to instantiate the `Loop` template for `I = 3, 4, ....` For any `I` that is a prime number, `IsPrime<I>::value` resolves to 1. 
+This causes the `Printer<1, I>` specialization to be instantiated, which contains a member probe of the undefined type `Prime_Number_Is<I>`.
+The attempt to instantiate an undefined template triggers a compile-time error. The error message explicitly names the template argument `I`, 
+thereby "printing" the prime number.
+
+## 6. Compilation and Output
+
+This code is designed to generate compilation errors as its output. 
+When compiled with a C++ compiler, it will not produce an executable but will report errors.
+
+Execute the following command in the terminal:
+
+```
+g++ -c your_file_name.cpp
+```
+
+The compiler output will include a series of errors, such as:
+
+```
+./template_prime.cpp:35:8: note: template is declared here
+   35 | struct Prime_Number_Is;
+      |        ^
+./template_prime.cpp:42:26: error: implicit instantiation of undefined template 'Prime_Number_Is<29>'
+   42 |     Prime_Number_Is<Num> probe;
+      |                          ^
+./template_prime.cpp:51:26: note: in instantiation of template class 'Printer<1, 29>' requested here
+   51 |     Printer<is_prime, I> p;
+      |                          ^
+./template_prime.cpp:47:19: note: in instantiation of template class 'Loop<29>' requested here
+   47 |     enum { prev = Loop<I - 1>::dummy };
+      |                   ^
+./template_prime.cpp:62:14: note: in instantiation of template class 'Loop<30>' requested here
+   62 |     Loop<30> worker;
+      |              ^
+./template_prime.cpp:35:8: note: template is declared here
+   35 | struct Prime_Number_Is;
+```
+
+The number 29 in the error message is one of the prime numbers calculated at compile time.
+
+## 7. Conclusion
+
+To replicate the conditions of C++ in 1994, which lacked features like constexpr, 
+this implementation uses the enum keyword to define compile-time constants. 
+A primary technical challenge was managing partial template specialization to avoid ambiguity and conflicts.
+
+In order to reproduce the C++ version late in 1994, during which we don't have constexpr and other template syntax, I use 'enum' to store 
+the compilation time value. Plus, it is not easy to resolve partial template instantiation conflict.
+
+Anyway, I hope you enjoyed this exploration. Feel free to leave a comment or a reaction!

@@ -18,6 +18,10 @@ export default defineConfig({
   site: 'https://blog.mdlws.net',
 
   markdown: {
+    shikiConfig: {
+      theme: 'github-light',
+      wrap: true
+    },
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex]
   },
