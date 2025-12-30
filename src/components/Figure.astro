@@ -5,12 +5,26 @@ import { Image } from 'astro:assets';
 // src: 图片对象 (import 进来的) 或 字符串路径
 // alt: 图片描述
 // caption: 图片下方的注脚文字
-const { src, alt, caption } = Astro.props;
+const {
+  src,
+  alt,
+  caption,
+  width,      // 新增：期望显示宽度（数字或字符串）
+  height,     // 新增：期望显示高度（可选）
+  maxWidth,   // 新增：容器最大宽度，例如 "720px" 或 "80%"
+  maxHeight,  // 新增：容器最大高度，例如 "480px"
+  className,  // 新增：自定义样式扩展
+} = Astro.props;
 ---
 
 <figure class="my-8">
   <!-- 图片容器：加一个极淡的边框和圆角 -->
-  <div class="rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
+  <div class="rounded-lg overflow-hidden border border-gray-100 bg-gray-50"
+    style={{
+      maxWidth,
+      maxHeight,
+    }}
+  >
     <!-- 
       Astro 的 <Image /> 组件：
       它会自动处理宽高比，防止页面抖动 (CLS)
@@ -19,6 +33,8 @@ const { src, alt, caption } = Astro.props;
       src={src} 
       alt={alt} 
       class="w-full h-auto block" 
+      width={width}
+      height={height}
     />
   </div>
 
